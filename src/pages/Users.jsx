@@ -1,7 +1,7 @@
 import SearchBar from "../components/SearchBar";
 import Filters from "../components/Filters";
 import UserCard from "../components/UserCard";
-import { useEffect,useState } from "react";
+import { useEffect,useMemo,useState } from "react";
 import { fetchUsers } from "../api/usersApi";
 import { useNavigate } from "react-router-dom";
 
@@ -11,6 +11,10 @@ const Users = () => {
   const [loading,setLoading] = useState(false);
   const [page,setPage] = useState(1);
   const [hasMore,setHasMore] = useState(true);
+
+  const [search, setSearch] = useState("");
+  const [gender,setGender] = useState("all");
+  const [country,setCountry] = useState("all");
 
   const navigate = useNavigate();
 
@@ -38,15 +42,47 @@ const Users = () => {
     }
     loadUsers();
   },[page])
+
+  // Code for Dynamic Countries
+  const countries = useMemo(() =>{
+    return Array.from(
+      new Set(users.map((u) => u.location.country))
+    )
+  },[users])
+
+  const filteredUsers = useMemo(() => {
+    return users.filter( (user)=>{
+      const matchesSearch = 
+      user.name.first.toLowerCase().includes(search.toLowerCase()) ||
+      user.name.last.toLowerCase().includes(search.toLowerCase()) ||
+      user.email.toLowerCase().includes(search.toLowerCase());
+
+      const matchesGender = gender === "all" || user.gender === gender;
+
+      const matchesCountry = country === "all" || user.location.country === country;
+
+      return matchesSearch && matchesGender && matchesCountry;
+
+
+
+      
+  })
+  },[users,search,gender,country])
   
   return (
     <>
-      <SearchBar />
-      <Filters />
+      <SearchBar value={search} onChange={setSearch}/>
+      <Filters
+      gender={gender}
+      setGender={setGender}
+      country = {country}
+      setCountry={setCountry}
+      countries={countries}
+      />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Render UserCard */}
-        {users.map((user) => (
+        {filteredUsers.map((user) => (
           <UserCard
           key = {user.id}
           user={user}
