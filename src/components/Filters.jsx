@@ -1,4 +1,18 @@
-const Filters = ({gender,setGender,country,setCountry,countries,age,setAge}) => {
+const Filters = ({gender,setGender,country,setCountry,countries,ageRange,setAgeRange}) => {
+
+  const handleMinAge = (value) =>{
+    setAgeRange((prev) => ({
+      min: Math.min(value,prev.max-1),
+      max: prev.max,
+    }));
+  }
+
+  const handleMaxAge = (value) =>{
+    setAgeRange((prev) => ({
+      min: prev.min,
+      max: Math.max(value,prev.min+1),
+    }));
+  }
   return (
     <div className="flex gap-4 mb-6">
       <select
@@ -26,18 +40,36 @@ const Filters = ({gender,setGender,country,setCountry,countries,age,setAge}) => 
         {/* Populate dynamically */}
       </select>
 
-      <select
-      value={age}
-      onChange={(e) => setAge(e.target.value)} 
-      className="px-3 py-2 border rounded"
-      >
-        <option value="all">All Ages</option>
-        <option value="18-30">18-30</option>
-        <option value="31-45">31-45</option>
-        <option value="46-60">46-60</option>
-        <option value="60+">60+</option>
-        {/* Populate dynamically */}
-      </select>
+
+       <div className="flex flex-col gap-1.5">
+        <p className="font-medium mb-1">
+          Age: {ageRange.min} – {ageRange.max}
+        </p>
+
+        <div className="flex gap-2">
+          <input
+            type="range"
+            min="18"
+            max="80"
+            value={ageRange.min}
+            onChange={(e) =>
+              handleMinAge(Number(e.target.value))
+            }
+            className="w-full cursor-pointer"
+          />
+
+          <input
+            type="range"
+            min="18"
+            max="80"
+            value={ageRange.max}
+            onChange={(e) =>
+              handleMaxAge(Number(e.target.value))
+            }
+            className="w-full cursor-pointer"
+          />
+        </div>
+      </div>
 
     </div>
   );

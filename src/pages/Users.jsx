@@ -15,7 +15,10 @@ const Users = () => {
   const [search, setSearch] = useState("");
   const [gender,setGender] = useState("all");
   const [country,setCountry] = useState("all");
-  const [age, setAge] = useState("all");
+  const [ageRange, setAgeRange] = useState({
+    min: 18,
+    max: 60
+  });
 
   const navigate = useNavigate();
 
@@ -62,11 +65,7 @@ const Users = () => {
 
       const matchesCountry = country === "all" || user.location.country === country;
 
-      const matchesAge = age === "all" || 
-                        (age === "18-30" && user.dob.age >= 18 && user.dob.age <= 30) ||
-                        (age === "31-45" && user.dob.age >= 31 && user.dob.age <= 45) ||
-                        (age === "46-60" && user.dob.age >= 46 && user.dob.age <= 60) ||
-                        (age === "60+" && user.dob.age > 60 ) 
+      const matchesAge = user.dob.age >= ageRange.min && user.dob.age <= ageRange.max;
 
 
       return matchesSearch && matchesGender && matchesCountry && matchesAge;
@@ -75,7 +74,7 @@ const Users = () => {
 
       
   })
-  },[users,search,gender,country,age])
+  },[users,search,gender,country,ageRange])
   
   return (
     <>
@@ -86,8 +85,8 @@ const Users = () => {
       country = {country}
       setCountry={setCountry}
       countries={countries}
-      age = {age}
-      setAge = {setAge}
+      ageRange = {ageRange}
+      setAgeRange = {setAgeRange}
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
