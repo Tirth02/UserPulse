@@ -4,7 +4,22 @@ import FavouriteContext from "./FavouriteContext";
 
 export const FavouritesContextProvider = ({children}) =>
 {
-    const [favourites, setFavourites] = useState([]);
+    const [favourites, setFavourites] = useState(() => {
+      try {
+        const stored = localStorage.getItem("favourites");
+        if(!stored) return [];
+        return JSON.parse(stored);
+      } catch (error) {
+        console.error("Invalid favourites in localStorage",error);
+        return [];
+      }
+      
+      
+    });
+
+    useEffect(() => {
+      localStorage.setItem("favourites",JSON.stringify(favourites))
+    },[favourites])
 
     const addFavourite = (user) => {
       setFavourites((prev) => {
