@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const UserCard = ({ user, onSelect, onFavorite }) => {
   return (
     <div className="bg-white rounded-lg shadow p-4 flex flex-col gap-3">
@@ -21,7 +23,7 @@ const UserCard = ({ user, onSelect, onFavorite }) => {
         </button>
 
         <button
-          onClick={onFavorite}
+          onClick={() => onFavorite?.(user.id)}
           className="px-3 py-1 text-sm border rounded"
         >
           Favorite
