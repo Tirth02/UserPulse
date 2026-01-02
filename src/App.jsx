@@ -1,12 +1,23 @@
 import './App.css'
-
+import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import Layout from './components/Layout'
+import Users from './pages/Users'
+import UserDetails from './pages/UserDetails'
+import RandomUser from './pages/RandomUser'
 function App() {
   
 
   return (
-    <>
-      <h1 className='text-3xl bg-yellow-200 text-green-700'>Hello Project</h1>
-    </>
+    <BrowserRouter>
+      <Layout>
+        <Routes>
+          <Route path='/' element={<Users/>}/>
+          <Route path='/users/:id' element={<UserDetails/>}/>
+          <Route path='/random' element={<RandomUser/>}/>
+          <Route/>
+        </Routes>
+      </Layout>
+    </BrowserRouter>
   )
 }
 
