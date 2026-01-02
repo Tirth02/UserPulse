@@ -15,6 +15,7 @@ const Users = () => {
   const [search, setSearch] = useState("");
   const [gender,setGender] = useState("all");
   const [country,setCountry] = useState("all");
+  const [age, setAge] = useState("all");
 
   const navigate = useNavigate();
 
@@ -61,13 +62,20 @@ const Users = () => {
 
       const matchesCountry = country === "all" || user.location.country === country;
 
-      return matchesSearch && matchesGender && matchesCountry;
+      const matchesAge = age === "all" || 
+                        (age === "18-30" && user.dob.age >= 18 && user.dob.age <= 30) ||
+                        (age === "31-45" && user.dob.age >= 31 && user.dob.age <= 45) ||
+                        (age === "46-60" && user.dob.age >= 46 && user.dob.age <= 60) ||
+                        (age === "60+" && user.dob.age > 60 ) 
+
+
+      return matchesSearch && matchesGender && matchesCountry && matchesAge;
 
 
 
       
   })
-  },[users,search,gender,country])
+  },[users,search,gender,country,age])
   
   return (
     <>
@@ -78,6 +86,8 @@ const Users = () => {
       country = {country}
       setCountry={setCountry}
       countries={countries}
+      age = {age}
+      setAge = {setAge}
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
