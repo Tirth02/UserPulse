@@ -6,6 +6,23 @@ export const FavouritesContextProvider = ({children}) =>
 {
     const [favourites, setFavourites] = useState([]);
 
+    const addFavourite = (user) => {
+      setFavourites((prev) => {
+        if(prev.find((u) => u.id === user.id)) return prev;
+        return [...prev,user];
+      });
+    }
+
+    const removeFavourite = (userId) => {
+      setFavourites((prev) => 
+        prev.filter((u) => u.id !== userId)
+      );
+    };
+
+    const isFavourite = (userId) => {
+      return favourites.some((u) => u.id === userId);
+    }
+
     // const toggleFavourite = (userId) => {
     //     console.log("In toggle Favourite",userId)
     //     setFavourites((prev) => {
@@ -14,7 +31,7 @@ export const FavouritesContextProvider = ({children}) =>
     // }
 
     return (
-    <FavouriteContext.Provider value={{ favourites, setFavourites }}>
+    <FavouriteContext.Provider value={{ favourites, addFavourite, removeFavourite, isFavourite  }}>
       {children}
     </FavouriteContext.Provider>
   );
