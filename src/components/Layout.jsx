@@ -1,14 +1,30 @@
+import { useContext } from "react";
+import { Link } from "react-router-dom";
+import FavouriteContext from "../context/FavouriteContext";
 const Layout = ({ children }) => {
+
+  const { favourites } = useContext(FavouriteContext);
   return (
-    <div className="min-h-screen bg-gray-100">
-      <header className="bg-white border-b px-6 py-4">
-        <h1 className="text-xl font-semibold">UserScope</h1>
+    <>
+      <header className="flex justify-between items-center p-4 shadow bg-white">
+        <h1 className="font-bold text-lg">Users App</h1>
+
+        <nav className="flex gap-4">
+          <Link to="/">Users</Link>
+
+          <Link to="/favourite" className="relative">
+            ❤️ Favourites
+            {favourites.length > 0 && (
+              <span className="ml-1 text-sm">
+                ({favourites.length})
+              </span>
+            )}
+          </Link>
+        </nav>
       </header>
 
-      <main className="max-w-7xl mx-auto p-6">
-        {children}
-      </main>
-    </div>
+      <main className="p-4">{children}</main>
+    </>
   );
 };
 
