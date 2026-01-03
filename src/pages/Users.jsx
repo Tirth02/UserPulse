@@ -1,7 +1,7 @@
 import SearchBar from "../components/SearchBar";
 import Filters from "../components/Filters";
 import UserCard from "../components/UserCard";
-import { useEffect,useMemo,useState } from "react";
+import { useEffect,useMemo,useState, useRef } from "react";
 import { fetchUsers } from "../api/usersApi";
 import { useNavigate } from "react-router-dom";
 
@@ -20,6 +20,7 @@ const Users = () => {
     max: 60
   });
 
+  const loaderRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,6 +38,7 @@ const Users = () => {
           );
           return [...prev,...uniqueNewUsers]
         });
+        setHasMore(response.data.nextPage)
       } catch (error) {
         console.error("Failed to fetch users",error);
       }
@@ -46,6 +48,28 @@ const Users = () => {
     }
     loadUsers();
   },[page])
+
+  useEffect(() =>{
+    if(loading || !hasMore) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) =>{
+        if(entry.isIntersecting){
+          setPage((prev) => prev + 1);
+        }
+      },
+      {
+        root: null,
+        rootMargin: "200px",
+        threshold: 0,
+      }
+    );
+
+    if (loaderRef.current) observer.observe(loaderRef.current);
+    return () => {
+      if(loaderRef.current) observer.unobserve(loaderRef.current)
+    }
+  },[loading,hasMore])
 
   // Code for Dynamic Countries
   const countries = useMemo(() =>{
@@ -103,14 +127,11 @@ const Users = () => {
 
       {/* Pagination / Load More */}
       {hasMore && (
-        <div className="flex justify-center mt-6">
-            <button
-            onClick={() => setPage((p) => p + 1)}
-            disabled = {loading}
-            className="px-4 py-2 border rounded cursor-pointer"
-            >
-              {loading? "loading..." : "LoadMore"}
-            </button>
+        <div
+          ref={loaderRef}
+          className="flex justify-center py-6 text-gray-500"
+        >
+          {loading && "Loading more users..."}
         </div>
       )}
 
