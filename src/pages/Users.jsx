@@ -3,7 +3,7 @@ import Filters from "../components/Filters";
 import UserCard from "../components/UserCard";
 import { useEffect,useMemo,useState, useRef } from "react";
 import { fetchUsers } from "../api/usersApi";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Users = () => {
   // YOUR LOGIC HERE
@@ -12,12 +12,14 @@ const Users = () => {
   const [page,setPage] = useState(1);
   const [hasMore,setHasMore] = useState(true);
 
-  const [search, setSearch] = useState("");
-  const [gender,setGender] = useState("all");
-  const [country,setCountry] = useState("all");
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [search, setSearch] = useState(searchParams.get("search") || "");
+  const [gender,setGender] = useState(searchParams.get("gender") || "all");
+  const [country,setCountry] = useState(searchParams.get("country") || "all");
   const [ageRange, setAgeRange] = useState({
-    min: 18,
-    max: 60
+    min: Number(searchParams.get("minAge")) || 18,
+    max: Number(searchParams.get("MaxAge")) || 60
   });
 
   const loaderRef = useRef(null);
@@ -70,6 +72,28 @@ const Users = () => {
       if(loaderRef.current) observer.unobserve(loaderRef.current)
     }
   },[loading,hasMore])
+
+
+  // Persist filters to URL
+  useEffect(() => {
+    const params = {};
+
+    if(search) params.search = search;
+    if(gender != "all") params.gender = gender;
+    if(country != "all") params.country = country;
+
+    params.minAge = ageRange.min;
+    params.maxAge = ageRange.max;
+
+    setSearchParams(params, {replace: true});
+  },[search,gender,country, ageRange, setSearchParams])
+
+  // 🔹 Reset pagination when filters change
+  useEffect(() => {
+    setUsers([]);
+    setPage(1);
+    setHasMore(true);
+  },[search,gender, country,ageRange])
 
   // Code for Dynamic Countries
   const countries = useMemo(() =>{
