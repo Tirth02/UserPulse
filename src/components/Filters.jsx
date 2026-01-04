@@ -14,11 +14,14 @@ const Filters = ({gender,setGender,country,setCountry,countries,ageRange,setAgeR
     }));
   }
   return (
-    <div className="flex gap-4 mb-6">
+    <div className="flex flex-wrap gap-4 mb-6">
       <select
       value={gender}
       onChange={(e) => setGender(e.target.value)}
-      className="px-3 py-2 border rounded"
+      className="px-3 py-2 rounded border
+          bg-white text-gray-900
+          dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700
+          focus:outline-none"
       >
         <option value="all">All Genders</option>
         <option value="male">Male</option>
@@ -28,7 +31,10 @@ const Filters = ({gender,setGender,country,setCountry,countries,ageRange,setAgeR
       <select
       value={country}
       onChange={(e) => setCountry(e.target.value)} 
-      className="px-3 py-2 border rounded"
+      className="px-3 py-2 rounded border
+          bg-white text-gray-900
+          dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700
+          focus:outline-none"
       >
         <option value="all">All Countries</option>
 
@@ -41,8 +47,8 @@ const Filters = ({gender,setGender,country,setCountry,countries,ageRange,setAgeR
       </select>
 
 
-       <div className="flex flex-col gap-1.5">
-        <p className="font-medium mb-1">
+       <div className="flex flex-col gap-1.5 min-w-[200px]">
+        <p className="font-medium text-gray-700 dark:text-gray-300">
           Age: {ageRange.min} – {ageRange.max}
         </p>
 
@@ -55,7 +61,7 @@ const Filters = ({gender,setGender,country,setCountry,countries,ageRange,setAgeR
             onChange={(e) =>
               handleMinAge(Number(e.target.value))
             }
-            className="w-full cursor-pointer"
+            className="w-full cursor-pointer accent-blue-500"
           />
 
           <input
@@ -66,7 +72,7 @@ const Filters = ({gender,setGender,country,setCountry,countries,ageRange,setAgeR
             onChange={(e) =>
               handleMaxAge(Number(e.target.value))
             }
-            className="w-full cursor-pointer"
+            className="w-full cursor-pointer accent-blue-500"
           />
         </div>
       </div>

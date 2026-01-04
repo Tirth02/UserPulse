@@ -14,4 +14,6 @@
 .animate-fade {
   animation: fade 0.3s ease-out;
 }
+
+@custom-variant dark (&:where(.dark &));
     
