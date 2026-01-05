@@ -7,23 +7,31 @@ import RandomUser from "./pages/RandomUser";
 import { FavouritesContextProvider } from "./context/FavouritesContextProvider";
 import Favourites from "./pages/Favourites";
 import { ThemeContextProvider } from "./context/ThemeContextProvider";
+import { AuthContextProvider } from "./context/AuthContext";
+import Login from "./pages/Login";
+import { UsersContextProvider } from "./context/UsersContext";
 function App() {
   return (
-    <ThemeContextProvider>
-      <FavouritesContextProvider>
-        <BrowserRouter>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<Users />} />
-              <Route path="/users/:id" element={<UserDetails />} />
-              <Route path="/random" element={<RandomUser />} />
-              <Route path="/favourite" element={<Favourites />} />
-              <Route />
-            </Routes>
-          </Layout>
-        </BrowserRouter>
-      </FavouritesContextProvider>
-    </ThemeContextProvider>
+    <BrowserRouter>
+      <ThemeContextProvider>
+        <UsersContextProvider>
+        <AuthContextProvider>
+          <FavouritesContextProvider>
+            <Layout>
+              <Routes>
+                <Route path="/" element={<Users />} />
+                <Route path="/login" element={<Login/>} />
+                <Route path="/users/:id" element={<UserDetails />} />
+                <Route path="/random" element={<RandomUser />} />
+                <Route path="/favourite" element={<Favourites />} />
+                <Route />
+              </Routes>
+            </Layout>
+          </FavouritesContextProvider>
+        </AuthContextProvider>
+        </UsersContextProvider>
+      </ThemeContextProvider>
+    </BrowserRouter>
   );
 }
 
