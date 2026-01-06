@@ -13,6 +13,7 @@ import { UsersContextProvider } from "./context/UsersContext";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import PublicRoute from "./routes/PublicRoute";
+import NotFoundRedirect from "./routes/NotFoundRedirect";
 function App() {
   return (
     <BrowserRouter>
@@ -34,6 +35,8 @@ function App() {
                     <Route path="/profile" element={<Profile />} />
                     <Route />
                   </Route>
+
+                  <Route path="*" element={<NotFoundRedirect/>}/>
                 </Routes>
               </Layout>
             </FavouritesContextProvider>
