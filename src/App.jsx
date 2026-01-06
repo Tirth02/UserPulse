@@ -10,6 +10,7 @@ import { ThemeContextProvider } from "./context/ThemeContextProvider";
 import { AuthContextProvider } from "./context/AuthContext";
 import Login from "./pages/Login";
 import { UsersContextProvider } from "./context/UsersContext";
+import Profile from "./pages/Profile";
 function App() {
   return (
     <BrowserRouter>
@@ -24,6 +25,7 @@ function App() {
                 <Route path="/users/:id" element={<UserDetails />} />
                 <Route path="/random" element={<RandomUser />} />
                 <Route path="/favourite" element={<Favourites />} />
+                <Route path="/profile" element={<Profile/>}/>
                 <Route />
               </Routes>
             </Layout>

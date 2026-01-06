@@ -1,16 +1,28 @@
-import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import FavouriteContext from "../context/FavouriteContext";
 import { Moon, Sun, Heart } from "lucide-react";
 import { useTheme } from "../context/ThemeContextProvider";
+import { useAuth } from "../context/AuthContext";
 
 const Layout = ({ children }) => {
   const { favourites } = useContext(FavouriteContext);
   const { theme, toggleTheme } = useTheme();
+  const { user, logOut } = useAuth();
+  const navigate = useNavigate();
+
+  const [open, setOpen] = useState(false);
+
+  const handleLogout = () => {
+    logOut();
+    setOpen(false);
+    navigate("/login");
+  };
 
   return (
     <>
-      <header className="sticky top-0 z-50 flex justify-between items-center px-6 py-4 shadow 
+      <header
+        className="sticky top-0 z-50 flex justify-between items-center px-6 py-4 shadow 
         bg-white dark:bg-gray-900 
         text-gray-900 dark:text-gray-100 transition-colors"
       >
@@ -54,10 +66,50 @@ const Layout = ({ children }) => {
               <Moon className="text-gray-800 dark:text-gray-200" size={20} />
             )}
           </button>
+
+          {!user ? (
+            <Link
+              to="/login"
+              className="px-3 py-1.5 border rounded hover:bg-gray-100 dark:hover:bg-gray-800"
+            >
+              Login
+            </Link>
+          ) : (
+            <div className="relative">
+              <button onClick={() => setOpen((p) => !p)}>
+                <img
+                  src={user.picture.thumbnail}
+                  alt="profile"
+                  className="w-9 h-9 rounded-full border"
+                />
+              </button>
+              {open && (
+                <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-800 border rounded shadow-lg">
+                  <button
+                    onClick={() => {
+                      navigate("/profile");
+                      setOpen(false);
+                    }}
+                    className="w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Profile
+                  </button>
+
+                  <button
+                    onClick={handleLogout}
+                    className="w-full px-4 py-2 text-left text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </nav>
       </header>
 
-      <main className="min-h-screen bg-gray-50 dark:bg-gray-900 
+      <main
+        className="min-h-screen bg-gray-50 dark:bg-gray-900 
         text-gray-900 dark:text-gray-100 transition-colors p-4"
       >
         {children}
